@@ -1,0 +1,8 @@
+baseURL = "https://moqueries.org/"
+languageCode = "en-us"
+title = "Moqueries"
+
+theme = "relearn"
+
+[outputs]
+home = [ "HTML", "RSS", "SEARCH" ]
