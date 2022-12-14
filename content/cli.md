@@ -2,5 +2,5 @@
 title: "CLI"
 weight: 10
 type: code
-vanity: github.com/moqueries/cli
+vanity: https://github.com/moqueries/cli
 ---
