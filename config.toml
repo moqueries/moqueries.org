@@ -6,3 +6,23 @@ theme = "relearn"
 
 [outputs]
 home = [ "HTML", "RSS", "SEARCH" ]
+
+[deployment]
+
+[[deployment.targets]]
+name = "deployment"
+URL = "s3://moqueries-docs?prefix=prod/"
+cloudFrontDistributionID = "E2S6V89TAZ3WDY"
+
+[[deployment.matchers]]
+pattern = "^.+\\.(css|eot|html|js|json|sh|svg|ttf|woff|woff2|yaml)$"
+gzip = true
+
+[[deployment.matchers]]
+pattern = "^.+\\.xml$"
+contentType = "application/xml"
+gzip = true
+
+[[deployment.matchers]]
+pattern = "^.+\\.(jpg|png)$"
+gzip = false
