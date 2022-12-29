@@ -3,3 +3,5 @@
 /.envrc
 /public
 /logs
+
+__pycache__
