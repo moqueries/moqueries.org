@@ -26,3 +26,6 @@ gzip = true
 [[deployment.matchers]]
 pattern = "^.+\\.(jpg|png)$"
 gzip = false
+
+[params]
+disableInlineCopyToClipBoard = true
