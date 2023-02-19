@@ -26,7 +26,16 @@ go-gets, \
 go-get-fails, \
 go-get-cli, \
 go-get-runtime, \
-go-get-other" > logs/prod-report.csv
+go-get-std, \
+go-get-root, \
+go-get-other, \
+index-all, \
+root, \
+quick-start, \
+using-mocks, \
+gen-mocks, \
+anatomy, \
+index-other" > logs/prod-report.csv
 
 for FILE in logs/prod-docs/*.log; do
   TOTAL=$(wc -l "$FILE" | awk '{ print $1 }')
@@ -37,7 +46,16 @@ for FILE in logs/prod-docs/*.log; do
   GO_GET_FAILS=0
   GO_GET_CLI=0
   GO_GET_RUNTIME=0
+  GO_GET_STD=0
+  GO_GET_ROOT=0
   GO_GET_OTHER=0
+  INDEX_ALL=0
+  ROOT=0
+  QUICK_START=0
+  USING_MOCKS=0
+  GEN_MOCKS=0
+  ANATOMY=0
+  INDEX_OTHER=0
   IFS="$(printf '\t')"; while read -r _ _ _ _ _ _ _ URI RC _ _ PARAMS _; do
     case ${RC:0:1} in
       2) (( RC_2XX++ ));;
@@ -52,7 +70,26 @@ for FILE in logs/prod-docs/*.log; do
       case $URI in
         "/cli")     (( GO_GET_CLI++ ));;
         "/runtime") (( GO_GET_RUNTIME++ ));;
+        "/std")     (( GO_GET_STD++ ));;
+        "/")        (( GO_GET_ROOT++ ));;
         *)          (( GO_GET_OTHER++ ));;
+      esac
+    fi
+    if [[ $URI =~ .*/index.html ]]; then
+      (( INDEX_ALL++ ))
+      case $URI in
+        "/quick-start/index.html")      (( QUICK_START++ ));;
+        "/using-mocks/index.html")      (( USING_MOCKS++ ));;
+        "/generating-mocks/index.html") (( GEN_MOCKS++ ));;
+        *)
+          if [[ $URI =~ /anatomy/.* ]]; then
+            (( ANATOMY++ ))
+          elif [[ $URI = "/index.html" ]]; then
+            (( ROOT++ ))
+          else
+            (( INDEX_OTHER++ ))
+          fi
+          ;;
       esac
     fi
   done < "$FILE"
@@ -66,9 +103,18 @@ $GO_GETS, \
 $GO_GET_FAILS, \
 $GO_GET_CLI, \
 $GO_GET_RUNTIME, \
-$GO_GET_OTHER" >> logs/prod-report.csv
+$GO_GET_STD, \
+$GO_GET_ROOT, \
+$GO_GET_OTHER, \
+$INDEX_ALL, \
+$ROOT, \
+$QUICK_START, \
+$USING_MOCKS, \
+$GEN_MOCKS, \
+$ANATOMY, \
+$INDEX_OTHER" >> logs/prod-report.csv
 
   grep "go-get" "$FILE" > "logs/prod-docs/go-gets/$(basename "$FILE")" || true
-  grep -v "go-get" "$FILE" > "${FILE%".log"}.other.log"
+  grep -v "go-get" "$FILE" > "${FILE%".log"}.other.log" || true
   mv "${FILE%".log"}.other.log" "$FILE"
 done
